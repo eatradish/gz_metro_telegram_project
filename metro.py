@@ -73,8 +73,13 @@ def get_metro(startStation, endStation):
         msg_list.append("理论最晚搭乘时间是: " + time)
 
     except:
-        msg_list.append('找不到「' + startStation + '」或者「' + endStation + '」站点')
         lst = metro_list.get_list()
+        if startStation in lst and endStation not in lst:
+            msg_list.append('找不到「' + endStation + '」站点')
+        elif startStation not in lst and endStation in lst:
+             msg_list.append('找不到「' + startStation + '」站点')
+        else:
+            msg_list.append('找不到「' + startStation + '」和「' + endStation + '」站点')
         startStation_set = set(startStation)
         endStation_set = set(endStation)
         if startStation in lst:
