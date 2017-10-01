@@ -55,19 +55,23 @@ def get_metro(startStation, endStation):
                         if j > i:
                             time = time_msg['list'][j]['endTow']
                             if time == '—':
-                                time = time_msg['list'][j + 1]['endTow']
+                                time = '不确定'
                         elif j < i:
                             time = time_msg['list'][j]['endOne']
                             if time == '—':
-                                time = time_msg['list'][j + 1]['endOne']
+                                time = '不确定'
                         else:
                             pass
                     else:
                         pass
             else:
                 pass
-        time = cal_time(time, msg['spendTime'])
+        try:
+            time = cal_time(time, msg['spendTime'])
+        except:
+            time = '不确定'
         msg_list.append("理论最晚搭乘时间是: " + time)
+
     except:
         msg_list.append('找不到「' + startStation + '」或者「' + endStation + '」站点')
         lst = metro_list.get_list()
