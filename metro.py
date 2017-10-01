@@ -69,7 +69,7 @@ def get_metro(startStation, endStation):
         time = cal_time(time, msg['spendTime'])
         msg_list.append("理论最晚搭乘时间是: " + time)
     except:
-        msg_list.append('找不到' + startStation + '或者' + endStation + '站点')
+        msg_list.append('找不到「' + startStation + '」或者「' + endStation + '」站点')
         lst = metro_list.get_list()
         for i in lst:
             import itertools as it
@@ -78,12 +78,7 @@ def get_metro(startStation, endStation):
                 for j in lst:
                     d = ''.join(el[0] for el in it.takewhile(lambda t: t[0] == t[1], zip(j, endStation)))
                     if d != '':
-                        if i == startStation:
-                            msg_list.append(startStation + ' ' + j)
-                        elif j == endStation:
-                            msg_list.append(i + ' ' + endStation)
-                        else:
-                            msg_list.append(i + ' ' + j)
+                        msg_list.append(i + ' ' + j)
         if len(msg_list) != 1:
             msg_lst2 = []
             msg_lst2.append('以下列出所有你可能要找的路线:')
