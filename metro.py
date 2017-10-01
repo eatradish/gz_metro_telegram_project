@@ -1,6 +1,7 @@
 import json
 import requests
 import logging
+import metro_list
 from dateutil.parser import parse
 
 def cal_time(time, time2):
@@ -24,15 +25,15 @@ def get_lineId(lineName):
     else:
         return
 def get_metro(startStation, endStation):
+    url = 'http://cs.gzmtr.com/base/doSearchPathLine.do?callback=jQuery18008559129836403419_1506405972423'
+    data = {'startStation': startStation, 'endStation': endStation}
+    headers = {'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/59.0.3071.115 Safari/537.36'}
+    r = requests.post(url, data = data) #headers = headers)
+    msg = r.text[41:-1]
+    msg_list = []
     try:
-        url = 'http://cs.gzmtr.com/base/doSearchPathLine.do?callback=jQuery18008559129836403419_1506405972423'
-        data = {'startStation': startStation, 'endStation': endStation}
-        headers = {'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/59.0.3071.115 Safari/537.36'}
-        r = requests.post(url, data = data) #headers = headers)
-        msg = r.text[41:-1]
         msg = json.loads(msg)
         s_info = '最佳乘车方案，途径 ' + repr(msg['count']) + ' 站，乘车时间 ' + msg['spendTime'] +' 分钟，票价 ' + repr(msg['price']) + ' 元'
-        msg_list = []
         msg_list.append(s_info)
         for i in range(len(msg['lines'])):
             try:
@@ -61,7 +62,27 @@ def get_metro(startStation, endStation):
                 pass
         time = cal_time(time, msg['spendTime'])
         msg_list.append("理论最晚搭乘时间是: " + time)
-        msg = '\n'.join(msg_list)
     except:
-        msg = 'Error'
+        msg_list.append('找不到' + startStation + '或者' + endStation + '站点')
+        lst = metro_list.get_list()
+        for i in lst:
+            import itertools as it
+            c = ''.join(el[0] for el in it.takewhile(lambda t: t[0] == t[1], zip(i, startStation)))
+            if c != '':
+                for j in lst:
+                    d = ''.join(el[0] for el in it.takewhile(lambda t: t[0] == t[1], zip(j, endStation)))
+                    if d != '':
+                        if i == startStation:
+                            msg_list.append(startStation + ' ' + j)
+                        elif j == endStation:
+                            msg_list.append(i + ' ' + endStation)
+                        else:
+                            msg_list.append(i + ' ' + j)
+        if len(msg_list) != 1:
+            msg_lst2 = []
+            msg_lst2.append('以下列出所有你可能要找的路线:')
+            list3 = [msg_list[0], msg_lst2[0]]
+            msg_list = list3 + msg_list[1:]
+    finally:
+        msg = '\n'.join(msg_list)
     return msg
