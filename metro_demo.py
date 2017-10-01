@@ -2,4 +2,4 @@ import metro
 import pprint
 
 if __name__ == '__main__':
-    pprint.pprint(metro.get_metro("西场", "珠江新城"))
+    pprint.pprint(metro.get_metro("大学城北", "祖庙"))

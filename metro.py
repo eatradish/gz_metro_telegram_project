@@ -88,6 +88,8 @@ def get_metro(startStation, endStation):
             msg_lst2.append('以下列出所有你可能要找的路线:')
             list3 = [msg_list[0], msg_lst2[0]]
             msg_list = list3 + msg_list[1:]
+        else:
+            msg_list.append('一个站名都没法好好输入你还是别坐地铁了')
     finally:
         msg = '\n'.join(msg_list)
     return msg
