@@ -82,11 +82,15 @@ def get_metro(startStation, endStation):
                 j = set(i)
                 if endStation_set - j != endStation_set:
                     msg_list.append(startStation + ' ' + i)
+                if i == startStation:
+                    msg_list.remove(startStation + ' ' + i)
         elif endStation in lst:
             for i in lst:
                 j = set(i)
                 if startStation_set - j != startStation_set:
                     msg_list.append(i + ' ' + endStation)
+                if i == endStation:
+                    msg_list.remove(i + ' ' + endStation)
         else:
             for i in lst:
                 for j in lst:
