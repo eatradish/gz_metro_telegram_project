@@ -103,6 +103,8 @@ def get_metro(startStation, endStation):
                     l = set(j)
                     if startStation_set - k != startStation_set and endStation_set - l != endStation_set:
                         msg_list.append(i +' ' + j)
+                    if i == j:
+                        msg_list.remove(i +' ' + j)
         if len(msg_list) != 1:
             msg_lst2 = []
             msg_lst2.append('以下列出所有你可能要找的路线:')
