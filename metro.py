@@ -13,6 +13,8 @@ def cal_time(time, time2):
     if time_minute < 0:
         time_minute = 60 + time_minute
         time_hour = time_hour - 1
+        if time_hour < 0:
+            time_hour = 24 + time_hour
         time = repr(time_hour) + ":" + repr(time_minute)
         cal_time(time, time2)
     else:
@@ -52,8 +54,12 @@ def get_metro(startStation, endStation):
                     if time_msg['list'][j]['stop'] == msg['lines'][-1]['stationName']:
                         if j > i:
                             time = time_msg['list'][j]['endTow']
+                            if time == '—':
+                                time = time_msg['list'][j + 1]['endTow']
                         elif j < i:
                             time = time_msg['list'][j]['endOne']
+                            if time == '—':
+                                time = time_msg['list'][j + 1]['endOne']
                         else:
                             pass
                     else:
