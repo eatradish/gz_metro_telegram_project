@@ -75,14 +75,25 @@ def get_metro(startStation, endStation):
     except:
         msg_list.append('找不到「' + startStation + '」或者「' + endStation + '」站点')
         lst = metro_list.get_list()
-        for i in lst:
-            import itertools as it
-            c = ''.join(el[0] for el in it.takewhile(lambda t: t[0] == t[1], zip(i, startStation)))
-            if c != '':
+        startStation_set = set(startStation)
+        endStation_set = set(endStation)
+        if startStation in lst:
+            for i in lst:
+                j = set(i)
+                if endStation_set - j != endStation_set:
+                    msg_list.append(startStation + ' ' + i)
+        elif endStation in lst:
+            for i in lst:
+                j = set(i)
+                if startStation_set - j != startStation_set:
+                    msg_list.append(i + ' ' + endStation)
+        else:
+            for i in lst:
                 for j in lst:
-                    d = ''.join(el[0] for el in it.takewhile(lambda t: t[0] == t[1], zip(j, endStation)))
-                    if d != '':
-                        msg_list.append(i + ' ' + j)
+                    k = set(i)
+                    l = set(j)
+                    if startStation_set - k != startStation_set and endStation_set - l != endStation_set:
+                        msg_list.append(i +' ' + j)
         if len(msg_list) != 1:
             msg_lst2 = []
             msg_lst2.append('以下列出所有你可能要找的路线:')
