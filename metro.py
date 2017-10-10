@@ -3,6 +3,7 @@ import requests
 import logging
 import metro_list
 from dateutil.parser import parse
+import get_lineId
 
 def cal_time(time, time2):
     time2 = int(time2)
@@ -15,17 +16,14 @@ def cal_time(time, time2):
         time_hour = time_hour - 1
         if time_hour < 0:
             time_hour = 24 + time_hour
-        time = repr(time_hour) + ":" + repr(time_minute)
         cal_time(time, time2)
     else:
-        time = repr(time_hour)+ ":" + repr(time_minute)
+        if time_minute > 10:
+            time = repr(time_hour)+ ":" + repr(time_minute)
+        else:
+            time = repr(time_hour)+ ":" + '0' + repr(time_minute)
     return time
-def get_lineId(lineName):
-    d = {"一号线": "1", "二号线": "2", "三号线": "3", "三北线": "3zx", "四号线": "4", "五号线": "5", "六号线": "6", "七号线": "7", "八号线": "8", "广佛线": "gf", "APM": "APM"}
-    if lineName in d.keys():
-        return d[lineName]
-    else:
-        return
+
 def get_metro(startStation, endStation):
     url = 'http://cs.gzmtr.com/base/doSearchPathLine.do?callback=jQuery18008559129836403419_1506405972423'
     data = {'startStation': startStation, 'endStation': endStation}
@@ -42,7 +40,7 @@ def get_metro(startStation, endStation):
                 msg_list.append('从' + msg['lines'][i]['stationName'] + '出发，乘坐' + msg['lines'][i]['lineName'] + '到达' + msg['lines'][i + 1]['stationName'])
             except:
                 continue
-        lineId = get_lineId(msg['lines'][-2]['lineName'])
+        lineId = get_lineId.get_lineId(msg['lines'][-2]['lineName'])
         t_url = 'http://cs.gzmtr.com/clkweb/doTimeService.do?callback=jQuery18009535422444381279_1506495968193&lineId=' + lineId
         t_r = requests.post(t_url)
         t = t_r.text[41:-1]
@@ -71,7 +69,6 @@ def get_metro(startStation, endStation):
         except:
             time = '不确定'
         msg_list.append("理论最晚搭乘时间是: " + time)
-
     except:
         lst = metro_list.get_list()
         if startStation in lst and endStation not in lst:
@@ -103,8 +100,6 @@ def get_metro(startStation, endStation):
                     l = set(j)
                     if startStation_set - k != startStation_set and endStation_set - l != endStation_set:
                         msg_list.append(i +' ' + j)
-                    if i == j:
-                        msg_list.remove(i +' ' + j)
         if len(msg_list) != 1:
             msg_lst2 = []
             msg_lst2.append('以下列出所有你可能要找的路线:')
