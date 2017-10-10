@@ -17,6 +17,9 @@ Telegram [@gz_metro_bot](https://t.me/gz_metro_bot)
 从珠江新城出发，乘坐五号线到达西场
 理论最晚搭乘时间是: 22:39
 ```
+```
+/time_line 给出某线路首尾班车经过的时间列表
+```
 
 
 ## 仅仅是这样而已吗？
