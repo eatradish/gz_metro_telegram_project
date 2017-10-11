@@ -11,17 +11,15 @@ def cal_time(time, time2):
     time_hour = p_time.hour
     time_minute = p_time.minute
     time_minute = time_minute - time2
-    if time_minute < 0:
+    while time_minute < 0:
         time_minute = 60 + time_minute
         time_hour = time_hour - 1
-        if time_hour < 0:
-            time_hour = 24 + time_hour
-        cal_time(time, time2)
+    if time_hour < 0:
+        time_hour = 24 + time_hour
+    if time_minute > 10:
+        time = repr(time_hour)+ ":" + repr(time_minute)
     else:
-        if time_minute > 10:
-            time = repr(time_hour)+ ":" + repr(time_minute)
-        else:
-            time = repr(time_hour)+ ":" + '0' + repr(time_minute)
+        time = repr(time_hour)+ ":" + '0' + repr(time_minute)
     return time
 
 def get_metro(startStation, endStation):
@@ -64,10 +62,9 @@ def get_metro(startStation, endStation):
                         pass
             else:
                 pass
-        try:
-            time = cal_time(time, msg['spendTime'])
-        except:
-            time = '不确定'
+        time = cal_time(time, msg['spendTime'])
+        #except:
+        #time = '不确定'
         msg_list.append("理论最晚搭乘时间是: " + time)
     except:
         lst = metro_list.get_list()
