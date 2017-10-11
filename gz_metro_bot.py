@@ -1,7 +1,9 @@
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters
+from telegram import ParseMode
 import metro
 import logging
 import metro_time_dic
+import get_station
 # Enable logging
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
                     level=logging.INFO)
@@ -46,15 +48,19 @@ def time_line(bot, update):
     except:
         result = '用法: /time_line + 线路，例如: /time_line 三北线'
     finally:
-        bot.sendMessage(chat_id = update.message.chat_id, text = result)
+        bot.sendMessage(chat_id = update.message.chat_id, text = '```' +result + '```', parse_mode = ParseMode.MARKDOWN)
 
 def error(bot, update, error):
     logger.warn('Update "%s" caused error "%s"' % (update, error))
 
+def search_station(bot, update):
+    msg = command_data_replace(update.message.text)
+    result = get_station.get_station(msg)
+    bot.sendMessage(chat_id = update.message.chat_id, text = result)
 
 def main():
     # Create the EventHandler and pass it your bot's token.
-    updater = Updater('KEY')
+    updater = Updater('')
 
     # Get the dispatcher to register handlers
     dp = updater.dispatcher
@@ -62,6 +68,7 @@ def main():
     # on different commands - answer in Telegram
     dp.add_handler(CommandHandler("search_line", search_line))
     dp.add_handler(CommandHandler("time_line", time_line))
+    dp.add_handler(CommandHandler("search_station", search_station))
     # log all errors
     dp.add_error_handler(error)
 
