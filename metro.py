@@ -62,9 +62,10 @@ def get_metro(startStation, endStation):
                         pass
             else:
                 pass
-        time = cal_time(time, msg['spendTime'])
-        #except:
-        #time = '不确定'
+        try:
+            time = cal_time(time, msg['spendTime'])
+        except:
+            time = '不确定'
         msg_list.append("理论最晚搭乘时间是: " + time)
     except:
         lst = metro_list.get_list()
