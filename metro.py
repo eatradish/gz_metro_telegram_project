@@ -31,7 +31,8 @@ def get_metro(startStation, endStation):
     msg_list = []
     try:
         msg = json.loads(msg)
-        s_info = '最佳乘车方案，途径 ' + repr(msg['count']) + ' 站，乘车时间 ' + msg['spendTime'] +' 分钟，票价 ' + repr(msg['price']) + ' 元'
+        s_info = '最佳乘车方案，途径 ' + repr(msg['count']) + ' 站，乘车时间 ' + msg['spendTime'] +' 分钟，票价 ' + repr(msg['price']) + ' 元，'
+        s_info = s_info + '羊城通 / 岭南通折后 ' + repr(msg['price'] * 0.6) + ' 元'
         msg_list.append(s_info)
         for i in range(len(msg['lines'])):
             try:
